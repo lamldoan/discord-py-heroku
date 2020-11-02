@@ -1,12 +1,13 @@
 import os
-from discord.ext import commands
-
 import random
 
-import discord
+from discord.ext import commands
+from dotenv import load_dotenv
 
-bot = commands.Bot(command_prefix="!")
-TOKEN = os.getenv("DISCORD_TOKEN")
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
+bot = commands.Bot(command_prefix='!')
 
 @bot.event
 async def on_ready():
@@ -16,18 +17,8 @@ async def on_ready():
 async def ping(ctx):
     await ctx.send("pong")
 
-@client.event
-async def on_member_join(member):
-    await member.create_dm()
-    await member.dm_channel.send(
-        f'Hi {member.name}, welcome to my Discord server!'
-    )
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
+@bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
+async def nine_nine(ctx):
     brooklyn_99_quotes = [
         'I\'m the human form of the 💯 emoji.',
         'Bingpot!',
@@ -37,11 +28,7 @@ async def on_message(message):
         ),
     ]
 
-    if message.content == '99!':
-        response = random.choice(brooklyn_99_quotes)
-        await message.channel.send(response)
+    response = random.choice(brooklyn_99_quotes)
+    await ctx.send(response)
 
-if __name__ == "__main__":
-    bot.run(TOKEN)
-
-client.run(TOKEN)
+bot.run(TOKEN)
